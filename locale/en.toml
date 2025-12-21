@@ -1,0 +1,21 @@
+"action.title" = "Submit ISRCs"
+"manifest.description" = "Adds a right click option on an album to submit the ISRCs to the MusicBrainz server specified in the Options."
+"manifest.long_description" = "Adds a right click option on an album to submit the ISRCs to the MusicBrainz server specified in the Options.\n\nTo use this function, you must first match your files to the appropriate tracks for a release. Once this is done, but before you save your files if you have Picard set to overwrite the 'isrc' tag in your files, right-click the release and select \"Submit ISRCs\" in the \"Plugins\" section. For each file that has a single valid ISRC in its metadata, the ISRC will be added to the recording on the release if it does not already exist. Once all tracks for the release have been processed, the missing ISRCs will be submitted to MusicBrainz.\n\nIf a file's metadata contains multiple ISRCs, such as if the file has already been tagged, then no ISRCs will be submitted for that file.\n\nIf one of the files contains an invalid ISRC, or if the same ISRC appears in the metadata for two or more files, then a notice will be displayed and the submission process will be aborted.\n\nWhen ISRCs have been submitted, a notice will be displayed showing whether or not the submission was successful.\n"
+"manifest.name" = "Submit ISRC"
+"message.error.duplicate_isrc" = "Duplicate ISRC found on track {track}: '{isrc}'"
+"message.error.invalid_isrc" = "Invalid ISRC found on track {track}: '{isrc}'"
+"message.error.network" = "There was an error processing the ISRC submission. Please try again.\n\nError Code: {error_code}\n\n{error_text}"
+"message.error.no_new_isrcs" = "No new ISRCs found for the tracks in the album."
+"message.error.no_tracks" = "No tracks found in the album."
+"message.error.title" = "Error"
+"message.info.multiple_isrcs" = "The following tracks have multiple ISRCs and were not processed:"
+["message.submitting.text"]
+one = "submitting {n} ISRC."
+other = "submitting {n} ISRCs."
+
+"message.submitting.title" = "Submitting"
+["message.success.text"]
+one = "Successfully submitted {n} ISRC."
+other = "Successfully submitted {n} ISRCs."
+
+"message.success.title" = "Success"

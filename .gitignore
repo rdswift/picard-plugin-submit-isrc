@@ -1,0 +1,6 @@
+/.project
+/picard
+/developer_notes.txt
+*.orig
+__pycache__
+*.pyc
