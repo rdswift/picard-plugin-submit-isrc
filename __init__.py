@@ -27,10 +27,9 @@ from picard.plugin3.api import (
     PluginApi,
     t_,
 )
-from picard.webservice.api_helpers import (
-    MBAPIHelper,
-    _wrap_xml_metadata,
-)
+from picard.webservice.api_helpers import MBAPIHelper
+from picard.webservice.api_helpers.musicbrainz import _wrap_xml_metadata
+
 
 RE_VALIDATE_ISRC = re.compile(r'^[A-Z]{2}[A-Z0-9]{3}[0-9]{7}$')
 
