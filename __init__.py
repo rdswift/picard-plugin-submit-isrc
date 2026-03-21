@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# Copyright (C) 2020-2021, 2023, 2025 Bob Swift (rdswift)
+# Copyright (C) 2020-2021, 2023, 2025-2026 Bob Swift (rdswift)
 #
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -27,8 +27,10 @@ from picard.plugin3.api import (
     PluginApi,
     t_,
 )
-from picard.webservice.api_helpers import MBAPIHelper
-from picard.webservice.api_helpers.musicbrainz import _wrap_xml_metadata
+from picard.webservice.api_helpers import (
+    MBAPIHelper,
+    wrap_xml_metadata,
+)
 
 
 RE_VALIDATE_ISRC = re.compile(r'^[A-Z]{2}[A-Z0-9]{3}[0-9]{7}$')
@@ -197,7 +199,7 @@ class SubmitAlbumISRCs(BaseAction):
         for isrc, recording in isrcs.items():
             xml_items.append(XML_TEMPLATE.format(recording, isrc))
         xml_items.append(XML_FOOTER)
-        data = _wrap_xml_metadata(''.join(xml_items))
+        data = wrap_xml_metadata(''.join(xml_items))
 
         # Initialize the MusicBrainz API Helper
         webservice = self.api.tagger.webservice
