@@ -207,7 +207,7 @@ class SubmitAlbumISRCs(BaseAction):
 
         # Set up parameters for the helper
         client_string = 'Picard_Plugin_{0}-v{1}'.format(
-            self.api.manifest.name,
+            'Submit ISRCs',
             self.api.get_plugin_version()
         ).replace(' ', '_')
         handler = self.submission_handler
