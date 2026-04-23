@@ -27,10 +27,7 @@ from picard.plugin3.api import (
     PluginApi,
     t_,
 )
-from picard.webservice.api_helpers import (
-    MBAPIHelper,
-    wrap_xml_metadata,
-)
+from picard.webservice.api_helpers import wrap_xml_metadata
 
 
 RE_VALIDATE_ISRC = re.compile(r'^[A-Z]{2}[A-Z0-9]{3}[0-9]{7}$')
@@ -202,8 +199,7 @@ class SubmitAlbumISRCs(BaseAction):
         data = wrap_xml_metadata(''.join(xml_items))
 
         # Initialize the MusicBrainz API Helper
-        webservice = self.api.tagger.webservice
-        helper = MBAPIHelper(webservice)
+        helper = self.api.mb_api
 
         # Set up parameters for the helper
         client_string = 'Picard_Plugin_{0}-v{1}'.format(
