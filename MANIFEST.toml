@@ -18,3 +18,4 @@ When ISRCs have been submitted, a notice will be displayed showing whether or no
 """
 categories = ["other"]
 homepage = "https://picard-plugins-user-guides.readthedocs.io/en/latest/submit_isrc/user_guide.html"
+report_bugs_to = "https://github.com/rdswift/picard-plugin-submit-isrc/issues"
