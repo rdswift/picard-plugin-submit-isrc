@@ -1,1 +1,21 @@
+"action.title" = "Soumettre des codes ISRC"
+"manifest.description" = "Ajoute une option accessible par un clic droit sur un album permettant d'envoyer les codes ISRC au serveur MusicBrainz indiqué dans les options."
+"manifest.long_description" = "Ajoute une option accessible par un clic droit sur un album permettant d'envoyer les codes ISRC au serveur MusicBrainz indiqué dans les options.\n\nPour utiliser cette fonction, vous devez d'abord associer vos fichiers aux pistes appropriées d'une sortie. Une fois cette opération effectuée, mais avant d'enregistrer vos fichiers si vous avez configuré Picard pour qu'il écrase la balise « isrc » dans vos fichiers, cliquez avec le bouton droit sur la sortie et sélectionnez « Soumettre les ISRC » dans la section « Plugins ». Pour chaque fichier dont les métadonnées contiennent un seul ISRC valide, celui-ci sera ajouté à l'enregistrement de l'album s'il n'existe pas déjà. Une fois que toutes les pistes de l'album auront été traitées, les ISRC manquants seront soumis à MusicBrainz.\n\nSi les métadonnées d'un fichier contiennent plusieurs ISRC, par exemple si le fichier a déjà été balisé, aucun ISRC ne sera soumis pour ce fichier.\n\nSi l'un des fichiers contient un ISRC invalide, ou si le même ISRC apparaît dans les métadonnées de deux fichiers ou plus, un message d'avertissement s'affichera et le processus de soumission sera interrompu.\n\nUne fois les ISRC soumis, un message s'affichera pour indiquer si la soumission a abouti ou non.\n"
+"manifest.name" = "Soumettre un code ISRC"
+"message.error.duplicate_isrc" = "Un code ISRC en double a été détecté sur le morceau {track} : « {isrc} »"
+"message.error.invalid_isrc" = "ISRC non valide détecté sur le morceau {track} : « {isrc} »"
+"message.error.network" = "Une erreur s'est produite lors du traitement de la soumission ISRC. Veuillez réessayer.\n\nCode d'erreur : {error_code}\n\n{error_text}"
+"message.error.no_new_isrcs" = "Aucun nouveau code ISRC n'a été trouvé pour les titres de l'album."
+"message.error.no_tracks" = "Aucun morceau trouvé dans l'album."
+"message.error.title" = "Erreur"
+"message.info.multiple_isrcs" = "Les morceaux suivants comportent plusieurs codes ISRC et n'ont pas été traités :"
 
+["message.submitting.text"]
+one = "soumettre {n} code ISRC."
+other = "soumettre {n} codes ISRC."
+"message.submitting.title" = "Soumettre"
+
+["message.success.text"]
+one = "{n} code ISRC ont été envoyés avec succès."
+other = "{n} codes ISRC ont été envoyés avec succès."
+"message.success.title" = "Succès"
