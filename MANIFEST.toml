@@ -19,3 +19,12 @@ When ISRCs have been submitted, a notice will be displayed showing whether or no
 categories = ["other"]
 homepage = "https://picard-plugins-user-guides.readthedocs.io/en/latest/submit_isrc/user_guide.html"
 report_bugs_to = "https://github.com/rdswift/picard-plugin-submit-isrc/issues"
+
+[name_i18n]
+fr = "Soumettre un code ISRC"
+
+[description_i18n]
+fr = "Ajoute une option accessible par un clic droit sur un album permettant d'envoyer les codes ISRC au serveur MusicBrainz indiqué dans les options."
+
+[long_description_i18n]
+fr = "Ajoute une option accessible par un clic droit sur un album permettant d'envoyer les codes ISRC au serveur MusicBrainz indiqué dans les options.\n\nPour utiliser cette fonction, vous devez d'abord associer vos fichiers aux pistes appropriées d'une sortie. Une fois cette opération effectuée, mais avant d'enregistrer vos fichiers si vous avez configuré Picard pour qu'il écrase la balise « isrc » dans vos fichiers, cliquez avec le bouton droit sur la sortie et sélectionnez « Soumettre les ISRC » dans la section « Plugins ». Pour chaque fichier dont les métadonnées contiennent un seul ISRC valide, celui-ci sera ajouté à l'enregistrement de l'album s'il n'existe pas déjà. Une fois que toutes les pistes de l'album auront été traitées, les ISRC manquants seront soumis à MusicBrainz.\n\nSi les métadonnées d'un fichier contiennent plusieurs ISRC, par exemple si le fichier a déjà été balisé, aucun ISRC ne sera soumis pour ce fichier.\n\nSi l'un des fichiers contient un ISRC invalide, ou si le même ISRC apparaît dans les métadonnées de deux fichiers ou plus, un message d'avertissement s'affichera et le processus de soumission sera interrompu.\n\nUne fois les ISRC soumis, un message s'affichera pour indiquer si la soumission a abouti ou non."
