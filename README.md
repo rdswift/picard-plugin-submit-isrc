@@ -11,3 +11,7 @@ If one of the files contains an invalid ISRC, or if the same ISRC appears in the
 When ISRCs have been submitted, a notice will be displayed showing whether or not the submission was successful.
 
 Please see the [User Guide](https://picard-plugins-user-guides.readthedocs.io/en/latest/submit_isrc/user_guide.html) for more information.
+
+## Contributing
+
+Please see the [Contribution Guidelines for MusicBrainz Picard Plugins](https://github.com/metabrainz/picard-plugins-registry/blob/main/PLUGIN_CONTRIBUTING.md) on how to help with development of this plugin.
