@@ -54,7 +54,7 @@ def show_popup(title, content, window=None):
 
     Args:
         title (str): Title for the pop-up dialog.
-        content (str): Test to be displayed in the pop-up dialog..
+        content (str): Text to be displayed in the pop-up dialog.
         window (object, optional): Parent object for the dialog. Defaults to None.
     """
     QtWidgets.QMessageBox.information(
@@ -69,126 +69,180 @@ def show_popup(title, content, window=None):
 class SubmitAlbumISRCs(BaseAction):
     TITLE = t_("action.title", "Submit ISRCs")
 
-    def callback(self, album):
-        if not album:
+    def callback(self, albums):
+        if not albums:
             self.api.logger.error("No album specified for submitting ISRCs.")
             return
 
         self.error_title = self.api.tr('message.error.title', 'Error')
 
-        self.api.logger.info("Submitting ISRCs for: %s", album[0].metadata['album'],)
-        if not album[0].tracks:
-            self.api.logger.debug("No tracks found in album: %s", album[0].metadata['album'],)
+        isrcs = {}
+        multi_isrcs = []
+        empty_albums = []
+        processed_albums = 0
+
+        self.api.logger.info("Submitting ISRCs for %d selected release(s).", len(albums))
+
+        for album in albums:
+            album_name = album.metadata.get('album', '')
+            if not album.tracks:
+                self.api.logger.debug("No tracks found in album: %s", album_name)
+                empty_albums.append(album_name or self.api.tr('message.album.unknown', 'Unknown release'))
+                continue
+
+            processed_albums += 1
+
+            for track in album.tracks:
+                if not track.files:
+                    continue
+
+                audio_file = track.files[0]
+                metadata = track.metadata
+                file_metadata = audio_file.orig_metadata
+
+                # No ISRC found in the file
+                if 'isrc' not in file_metadata:
+                    continue
+
+                # Get string of existing ISRCs on MusicBrainz
+                if 'isrc' in metadata:
+                    mb_isrc = metadata['isrc'].upper()
+                else:
+                    mb_isrc = ''
+
+                # Get ISRC string from the file
+                file_isrc = file_metadata['isrc']
+
+                # Multiple ISRCs found in the file (don't process)
+                if ';' in file_isrc:
+                    multi_isrcs.append(
+                        f"  {album_name}: {metadata['tracknumber']} - {metadata['title']}"
+                    )
+                    self.api.logger.info(
+                        "Multiple ISRCs found on track %s in %s (not processed): %s",
+                        metadata['tracknumber'],
+                        album_name,
+                        file_isrc,
+                    )
+                    continue
+
+                isrc = validate_isrc(file_isrc)
+
+                # ISRC does not pass validation test
+                if not isrc:
+                    self.api.logger.debug(
+                        "Invalid ISRC found on track %s in %s: %s",
+                        metadata['tracknumber'],
+                        album_name,
+                        file_isrc,
+                    )
+                    show_popup(
+                        self.error_title,
+                        self.api.tr(
+                            'message.error.invalid_isrc',
+                            "Invalid ISRC found on track {track}: '{isrc}'"
+                        ).format(track=metadata['tracknumber'], isrc=file_isrc)
+                    )
+                    return
+
+                recording_id = metadata['musicbrainz_recordingid']
+
+                # The same ISRC may legitimately appear in multiple selected releases
+                # when they reference the same MusicBrainz recording. Only abort if the
+                # same ISRC would be submitted to different recordings.
+                if isrc in isrcs:
+                    if isrcs[isrc] != recording_id:
+                        self.api.logger.debug(
+                            "Conflicting duplicate ISRC found on track %s in %s: %s",
+                            metadata['tracknumber'],
+                            album_name,
+                            file_isrc,
+                        )
+                        show_popup(
+                            self.error_title,
+                            self.api.tr(
+                                'message.error.duplicate_isrc',
+                                "Duplicate ISRC found on track {track}: '{isrc}'"
+                            ).format(track=metadata['tracknumber'], isrc=file_isrc)
+                        )
+                        return
+                    continue
+
+                # ISRC already associated with that track (MusicBrainz recording)
+                if isrc in mb_isrc:
+                    continue
+
+                # New ISRC added for submission
+                self.api.logger.debug(
+                    "Adding ISRC '%s' for %s track %s - \"%s\"",
+                    isrc,
+                    album_name,
+                    metadata['tracknumber'],
+                    metadata['title'],
+                )
+                isrcs[isrc] = recording_id
+
+        if processed_albums == 0:
             show_popup(
                 self.error_title,
-                self.api.tr('message.error.no_tracks', 'No tracks found in the album.')
+                self.api.tr('message.error.no_tracks', 'No tracks found in the selected releases.')
             )
             return
 
-        isrcs = {}
-        multi_isrcs = []
-        for track in album[0].tracks:
-            if not track.files:
-                continue
-            audio_file = track.files[0]
-            metadata = track.metadata
-            file_metadata = audio_file.orig_metadata
-
-            # No ISRC found in the file
-            if 'isrc' not in file_metadata:
-                continue
-
-            # Get string of existing ISRCs on MusicBrainz
-            if 'isrc' in metadata:
-                mb_isrc = metadata['isrc'].upper()
-            else:
-                mb_isrc = ''
-
-            # Get ISRC string from the file
-            file_isrc = file_metadata['isrc']
-
-            # Multiple ISRCs found in the file (don't process)
-            if ';' in file_isrc:
-                multi_isrcs.append(f"  {metadata['tracknumber']} - {metadata['title']}")
-                self.api.logger.info("Multiple ISRCs found on track %s (not processed): %s", metadata['tracknumber'], file_isrc)
-                continue
-
-            isrc = validate_isrc(file_isrc)
-
-            # ISRC does not pass validation test
-            if not isrc:
-                self.api.logger.debug("Invalid ISRC found on track %s: %s", metadata['tracknumber'], file_isrc)
-                show_popup(
-                    self.error_title,
-                    self.api.tr(
-                        'message.error.invalid_isrc',
-                        "Invalid ISRC found on track {track}: '{isrc}'"
-                    ).format(track=metadata['tracknumber'], isrc=file_isrc)
-                )
-                return
-
-            # ISRC already found on another track for this album
-            if isrc in isrcs:
-                self.api.logger.debug("Duplicate ISRC found on track %s: %s", metadata['tracknumber'], file_isrc)
-                show_popup(
-                    self.error_title,
-                    self.api.tr(
-                        'message.error.duplicate_isrc',
-                        "Duplicate ISRC found on track {track}: '{isrc}'"
-                    ).format(track=metadata['tracknumber'], isrc=file_isrc)
-                )
-                return
-
-            # ISRC already associated with that track (MusicBrainz recording)
-            if isrc in mb_isrc:
-                continue
-
-            # New ISRC added for submission
-            self.api.logger.debug("Adding ISRC '%s' for track %s - \"%s\"", isrc, metadata['tracknumber'], metadata['title'])
-            isrcs[isrc] = metadata['musicbrainz_recordingid']
+        notices = []
 
         if multi_isrcs:
-            multiple_msg = (
-                '\n\n'
-                + self.api.tr(
+            notices.append(
+                self.api.tr(
                     'message.info.multiple_isrcs',
                     'The following tracks have multiple ISRCs and were not processed:'
                 )
                 + '\n'
                 + '\n'.join(multi_isrcs)
             )
-        else:
-            multiple_msg = ''
 
-        # Save count of new ISRCs to display in success message
+        if empty_albums:
+            notices.append(
+                self.api.tr(
+                    'message.info.empty_releases',
+                    'The following selected releases had no tracks and were skipped:'
+                )
+                + '\n  '
+                + '\n  '.join(empty_albums)
+            )
+
+        notices_msg = ('\n\n' + '\n\n'.join(notices)) if notices else ''
+
+        # Save counts to display in success message
         self.isrc_count = len(isrcs)
+        self.album_count = processed_albums
 
         # Nothing to submit
         if not isrcs:
-            self.api.logger.debug("No new ISRCs found in album: %s", album[0].metadata['album'])
+            self.api.logger.debug("No new ISRCs found in selected releases.")
             show_popup(
                 self.error_title,
                 self.api.tr(
                     'message.error.no_new_isrcs',
-                    "No new ISRCs found for the tracks in the album."
+                    "No new ISRCs found for the tracks in the selected releases."
                 )
-                + multiple_msg
+                + notices_msg
             )
             return
 
-        if multiple_msg:
+        if notices_msg:
             show_popup(
                 self.api.tr('message.submitting.title', 'Submitting'),
                 self.api.trn(
                     'message.submitting.text',
-                    singular="submitting {n} ISRC.",
-                    plural="submitting {n} ISRCs.",
+                    singular="Submitting {n} ISRC.",
+                    plural="Submitting {n} ISRCs.",
                     n=self.isrc_count,
                 )
-                + multiple_msg
+                + notices_msg
             )
 
-        # Build the xml data payload
+        # Build the XML data payload
         xml_items = [XML_HEADER]
         for isrc, recording in isrcs.items():
             xml_items.append(XML_TEMPLATE.format(recording, isrc))
@@ -221,19 +275,23 @@ class SubmitAlbumISRCs(BaseAction):
                     plural='Successfully submitted {n} ISRCs.',
                     n=self.isrc_count,
                 )
+                + self.api.trn(
+                    'message.success.releases',
+                    singular='\nProcessed {n} selected release.',
+                    plural='\nProcessed {n} selected releases.',
+                    n=self.album_count,
+                )
             )
             return
 
         # Decode response if necessary.
         xml_text = str(document, 'UTF-8') if isinstance(document, (bytes, bytearray, QtCore.QByteArray)) else str(document)
 
-        # Build error text message from returned xml payload
+        # Build error text message from returned XML payload
         err_text = ''
         matches = re.findall(r'<text>(.*?)</text>', xml_text)
         if matches:
             err_text = '\n'.join(matches)
-        else:
-            err_text = ''
 
         if not err_text:
             err_text = 'There was no error message provided.'
