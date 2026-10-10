@@ -1,1 +1,21 @@
+"action.title" = "提交 ISRCs"
+"manifest.description" = "在专辑上添加右键选项，将 ISRCs 提交给 选项 中指定的 MusicBrainz 服务器。"
+"manifest.long_description" = "在专辑上添加右键选项，将 ISRCs 提交给 选项 中指定的 MusicBrainz 服务器。\n\n要使用此功能，您必须首先将您的文件匹配到发行品的适当音轨。完成后，如果您将 Picard 设置为覆盖文件中的 'isrc' 标签，但在保存文件之前，右键单击发行品并在 \"插件\" 部分中选择 \"提交 ISRCs\"。对于元数据中具有单个有效 ISRC 的每个文件，如果它不存在于发行品上的录音中，则 ISRC 将被添加到该录音中。一旦所有发行品的音轨都处理完毕，缺失的 ISRCs 将被提交到 MusicBrainz。\n\n如果文件的元数据包含多个 ISRCs，例如如果文件已经被标记，则不会为该文件提交 ISRCs。\n\n如果其中一个文件包含无效的 ISRC，或者如果相同的 ISRC 出现在两个或多个文件的元数据中，则将显示通知并中止提交过程。\n\n当 ISRCs 被提交后，将显示通知，显示提交是否成功。\n"
+"manifest.name" = "提交 ISRC"
+"message.error.duplicate_isrc" = "在音轨 {track} 上发现重复的 ISRC: '{isrc}'"
+"message.error.invalid_isrc" = "在音轨 {track} 上发现无效的 ISRC: '{isrc}'"
+"message.error.network" = "处理 ISRC 提交时出现错误。请重试。\n\n错误代码: {error_code}\n\n{error_text}"
+"message.error.no_new_isrcs" = "在专辑的音轨中未发现新的 ISRCs。"
+"message.error.no_tracks" = "在专辑中未发现音轨。"
+"message.error.title" = "错误"
+"message.info.multiple_isrcs" = "以下音轨具有多个 ISRCs 且未被处理:"
 
+["message.submitting.text"]
+one = "提交 {n} ISRC。"
+other = "提交 {n} ISRCs。"
+"message.submitting.title" = "提交中"
+
+["message.success.text"]
+one = "成功提交 {n} ISRC。"
+other = "成功提交 {n} ISRCs。"
+"message.success.title" = "成功"
