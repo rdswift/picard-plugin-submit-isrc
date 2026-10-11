@@ -22,9 +22,12 @@ report_bugs_to = "https://github.com/rdswift/picard-plugin-submit-isrc/issues"
 
 [name_i18n]
 fr = "Soumettre un code ISRC"
+zh_CN = "提交 ISRC"
 
 [description_i18n]
 fr = "Ajoute une option accessible par un clic droit sur un album permettant d'envoyer les codes ISRC au serveur MusicBrainz indiqué dans les options."
+zh_CN = "在专辑上添加右键选项，将 ISRCs 提交给 选项 中指定的 MusicBrainz 服务器。"
 
 [long_description_i18n]
 fr = "Ajoute une option accessible par un clic droit sur un album permettant d'envoyer les codes ISRC au serveur MusicBrainz indiqué dans les options.\n\nPour utiliser cette fonction, vous devez d'abord associer vos fichiers aux pistes appropriées d'une sortie. Une fois cette opération effectuée, mais avant d'enregistrer vos fichiers si vous avez configuré Picard pour qu'il écrase la balise « isrc » dans vos fichiers, cliquez avec le bouton droit sur la sortie et sélectionnez « Soumettre les ISRC » dans la section « Plugins ». Pour chaque fichier dont les métadonnées contiennent un seul ISRC valide, celui-ci sera ajouté à l'enregistrement de l'album s'il n'existe pas déjà. Une fois que toutes les pistes de l'album auront été traitées, les ISRC manquants seront soumis à MusicBrainz.\n\nSi les métadonnées d'un fichier contiennent plusieurs ISRC, par exemple si le fichier a déjà été balisé, aucun ISRC ne sera soumis pour ce fichier.\n\nSi l'un des fichiers contient un ISRC invalide, ou si le même ISRC apparaît dans les métadonnées de deux fichiers ou plus, un message d'avertissement s'affichera et le processus de soumission sera interrompu.\n\nUne fois les ISRC soumis, un message s'affichera pour indiquer si la soumission a abouti ou non."
+zh_CN = "在专辑上添加右键选项，将 ISRCs 提交给 选项 中指定的 MusicBrainz 服务器。\n\n要使用此功能，您必须首先将您的文件匹配到发行品的适当音轨。完成后，如果您将 Picard 设置为覆盖文件中的 'isrc' 标签，但在保存文件之前，右键单击发行品并在 \"插件\" 部分中选择 \"提交 ISRCs\"。对于元数据中具有单个有效 ISRC 的每个文件，如果它不存在于发行品上的录音中，则 ISRC 将被添加到该录音中。一旦所有发行品的音轨都处理完毕，缺失的 ISRCs 将被提交到 MusicBrainz。\n\n如果文件的元数据包含多个 ISRCs，例如如果文件已经被标记，则不会为该文件提交 ISRCs。\n\n如果其中一个文件包含无效的 ISRC，或者如果相同的 ISRC 出现在两个或多个文件的元数据中，则将显示通知并中止提交过程。\n\n当 ISRCs 被提交后，将显示通知，显示提交是否成功。"
